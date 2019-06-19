@@ -32,7 +32,7 @@ public class SearchPage extends BasePage{
     
     public SearchPage filterFirstRegistration (String year){
     	click(firstRegistrationBy);
-    	selectFromDropdown(firstRegistrationDropdownBy, "2015");
+    	selectFromDropdown(firstRegistrationDropdownBy, year);
     	return this;
     }
 }
