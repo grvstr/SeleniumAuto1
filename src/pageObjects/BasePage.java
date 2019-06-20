@@ -13,12 +13,19 @@ public class BasePage {
     //Constructor
     public BasePage (WebDriver driver){
         this.driver = driver;
-        wait = new WebDriverWait(driver,15);
+        wait = new WebDriverWait(driver, 15);
     }
+    
+    //Web elements
+    By loadingProgressBar = By.xpath("//div[@data-qa-selector=\"loading-banner\"]");
  
     //Wait Wrapper Method
     public void waitVisibility(By elementBy) {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementBy));
+    }
+    
+    public void waitInvisibility(By elementBy) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(elementBy));
     }
  
     //Click Method
@@ -46,4 +53,9 @@ public class BasePage {
         return driver.findElement(elementBy).getText();
     }
     
+    //Wait for progress bar to disappear
+    public void waitForIt()
+    {
+    	waitInvisibility(loadingProgressBar);
+    }
 }

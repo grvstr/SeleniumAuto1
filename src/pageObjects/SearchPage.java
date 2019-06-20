@@ -34,15 +34,16 @@ public class SearchPage extends BasePage{
         return this;
     }
     
-    public SearchPage sortPriceDesc () throws InterruptedException{
+    public SearchPage sortPriceDesc () {
     	selectFromDropdown(sortDropdownBy, "Höchster Preis");
-    	Thread.sleep(1000); //TODO
+    	waitForIt();
     	return this;
     }
     
     public SearchPage filterFirstRegistration (String year){
     	click(firstRegistrationBy);
     	selectFromDropdown(firstRegistrationDropdownBy, year);
+    	waitForIt();
     	return this;
     }
     
@@ -66,17 +67,17 @@ public class SearchPage extends BasePage{
     	return this;
     }
     
-    public SearchPage goToNextPage () throws InterruptedException{
+    public SearchPage goToNextPage () {
     	click(nextBy);
-    	Thread.sleep(2000); //TODO
+    	waitForIt();
     	return this;
     }
 
-    public SearchPage iteratePages () throws InterruptedException{
+    public SearchPage iteratePages () {
     	while (driver.findElements(nextDisabledBy).size() < 1) {
     		goToNextPage();
-    		verifyFirstRegistration("2015");
-    		verifySortPriceDesc();
+    		//verifyFirstRegistration("2015");
+    		//verifySortPriceDesc();
     	}
     	return this;
     }
