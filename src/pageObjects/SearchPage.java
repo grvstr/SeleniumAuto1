@@ -25,6 +25,8 @@ public class SearchPage extends BasePage{
     By sortDropdownBy = By.xpath("//div[@data-qa-selector=\"sort-select\"]//select");
     By priceListBy = By.xpath("//div[@data-qa-selector=\"price\"]");
     By yearListBy = By.xpath("//ul[@data-qa-selector=\"spec-list\"]/li[1]");
+    By nextBy = By.xpath("//span[@aria-label=\"Next\"]");
+    By nextDisabledBy = By.xpath("//span[@aria-label=\"Next\"]/ancestor::li[@class=\"disabled\"]");
     
     //*********Page Methods*********
     public SearchPage goToSearchPage (){
@@ -61,6 +63,21 @@ public class SearchPage extends BasePage{
      	
      	Assert.assertTrue(sortedList.equals(obtainedList));
 
+    	return this;
+    }
+    
+    public SearchPage goToNextPage () throws InterruptedException{
+    	click(nextBy);
+    	Thread.sleep(2000); //TODO
+    	return this;
+    }
+
+    public SearchPage iteratePages () throws InterruptedException{
+    	while (driver.findElements(nextDisabledBy).size() < 1) {
+    		goToNextPage();
+    		verifyFirstRegistration("2015");
+    		verifySortPriceDesc();
+    	}
     	return this;
     }
     

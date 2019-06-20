@@ -12,10 +12,11 @@ public class SearchTest extends BaseTest {
  
         //*************PAGE METHODS********************
         searchPage.goToSearchPage()
-        .filterFirstRegistration("2015")
-        .sortPriceDesc()
-        .verifySortPriceDesc()
-        .verifyFirstRegistration("2015");
+            .filterFirstRegistration("2015")
+            .sortPriceDesc()
+            .verifySortPriceDesc()
+            .verifyFirstRegistration("2015")
+            .iteratePages();
         
     }
 }
