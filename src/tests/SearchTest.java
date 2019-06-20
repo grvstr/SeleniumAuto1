@@ -11,12 +11,18 @@ public class SearchTest extends BaseTest {
         SearchPage searchPage = new SearchPage(driver);
  
         //*************PAGE METHODS********************
-        searchPage.goToSearchPage()
-            .filterFirstRegistration("2015")
-            .sortPriceDesc()
-            .verifySortPriceDesc()
-            .verifyFirstRegistration("2015")
-            .iteratePages();
+        try {
+            searchPage.goToSearchPage()
+                .filterFirstRegistration("2015")
+                .sortPriceDesc()
+                .verifySortPriceDesc()
+                .verifyFirstRegistration("2015")
+                .iteratePages();
+        }
+        finally
+        {
+        	System.out.printf("");
+        }
         
     }
 }

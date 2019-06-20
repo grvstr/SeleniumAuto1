@@ -47,15 +47,15 @@ public class SearchPage extends BasePage{
     }
     
     public SearchPage verifySortPriceDesc (){
-    	ArrayList<String> obtainedList = new ArrayList<>(); 
+    	ArrayList<Integer> obtainedList = new ArrayList<>(); 
     	List<WebElement> elementList= driver.findElements(priceListBy);
     	
     	for(WebElement we:elementList){
-     	   obtainedList.add(we.getText());
+     	   obtainedList.add(Integer.parseInt(we.getText().split(" ")[0].replaceAll("\\.", "")));
      	}
     	
-     	ArrayList<String> sortedList = new ArrayList<>();   
-     	for(String s:obtainedList){
+     	ArrayList<Integer> sortedList = new ArrayList<>();   
+     	for(Integer s:obtainedList){
      		sortedList.add(s);
      	}
      	Collections.sort(sortedList);
