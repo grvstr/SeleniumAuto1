@@ -5,7 +5,7 @@ import pageObjects.SearchPage;
  
 public class SearchTest extends BaseTest {
     @Test (priority = 0)
-    public void searchTest () {
+    public void searchTest () throws InterruptedException {
  
         //*************PAGE INSTANTIATIONS*************
         SearchPage searchPage = new SearchPage(driver);
@@ -13,7 +13,9 @@ public class SearchTest extends BaseTest {
         //*************PAGE METHODS********************
         searchPage.goToSearchPage()
         .filterFirstRegistration("2015")
-        .sortPriceDesc();
+        .sortPriceDesc()
+        .verifySortPriceDesc()
+        .verifyFirstRegistration("2015");
         
     }
 }
