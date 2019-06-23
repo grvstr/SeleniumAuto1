@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import pageObjects.SearchPage;
  
 public class SearchTest extends BaseTest {
-    @Test (priority = 0)
+    @Test
     public void searchTest () {
  
         //*************PAGE INSTANTIATIONS*************
@@ -14,9 +14,7 @@ public class SearchTest extends BaseTest {
         searchPage.goToSearchPage()
                 .filterFirstRegistration("2015")
                 .sortPriceDesc()
-                .verifySortPriceDesc()
-                .verifyFirstRegistration("2015")
-                .iteratePages();
+                .validateFirstRegistrationAndPriceDesc("2015");
         
     }
 }

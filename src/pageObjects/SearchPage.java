@@ -25,8 +25,8 @@ public class SearchPage extends BasePage{
     By sortDropdownBy = By.xpath("//div[@data-qa-selector=\"sort-select\"]//select");
     By priceListBy = By.xpath("//div[@data-qa-selector=\"price\"]");
     By yearListBy = By.xpath("//ul[@data-qa-selector=\"spec-list\"]/li[1]");
-    By nextBy = By.xpath("//span[@aria-label=\"Next\"]");
-    By nextDisabledBy = By.xpath("//span[@aria-label=\"Next\"]/ancestor::li[@class=\"disabled\"]");
+    By nextButtonBy = By.xpath("//span[@aria-label=\"Next\"]");
+    By nextButtonDisabledBy = By.xpath("//span[@aria-label=\"Next\"]/ancestor::li[@class=\"disabled\"]");
     
     //*********Page Methods*********
     public SearchPage goToSearchPage (){
@@ -36,18 +36,25 @@ public class SearchPage extends BasePage{
     
     public SearchPage sortPriceDesc () {
     	selectFromDropdown(sortDropdownBy, "Höchster Preis");
-    	waitForIt();
+    	waitForProgressbarToDisappear();
     	return this;
     }
     
     public SearchPage filterFirstRegistration (String year){
     	click(firstRegistrationBy);
     	selectFromDropdown(firstRegistrationDropdownBy, year);
-    	waitForIt();
+    	waitForProgressbarToDisappear();
     	return this;
     }
     
-    public SearchPage verifySortPriceDesc (){
+    public SearchPage goToNextPage () {
+    	click(nextButtonBy);
+    	waitForProgressbarToDisappear();
+    	return this;
+    }
+    
+    //GET
+    public ArrayList<Integer> getPriceList () {
     	ArrayList<Integer> obtainedList = new ArrayList<>(); 
     	List<WebElement> elementList= driver.findElements(priceListBy);
     	
@@ -55,40 +62,65 @@ public class SearchPage extends BasePage{
      	   obtainedList.add(Integer.parseInt(we.getText().split(" ")[0].replaceAll("\\.", "")));
      	}
     	
-     	ArrayList<Integer> sortedList = new ArrayList<>();   
+    	return obtainedList;
+    }
+    
+    public ArrayList<Integer> getFirstRegistrationList (){
+    	
+    	ArrayList<Integer> obtainedList = new ArrayList<>(); 
+    	List<WebElement> elementList= driver.findElements(yearListBy);
+    	
+    	for(WebElement we:elementList){
+     	   obtainedList.add(Integer.parseInt(we.getText().substring(5)));
+     	}
+    	
+    	return obtainedList;
+    }
+    
+    //VALIDATE
+    
+    public SearchPage validateFirstRegistrationAndPriceDesc (String year) {
+    	
+    	//getting list of first registrations and prices
+    	ArrayList<Integer> firstRegistrationList = getFirstRegistrationList();
+    	ArrayList<Integer> priceList = getPriceList();
+    	
+    	//if there are more than one page, we will iterate through all of them
+    	while (driver.findElements(nextButtonDisabledBy).size() < 1) {
+    		goToNextPage();
+    		firstRegistrationList.addAll(getFirstRegistrationList());
+    		priceList.addAll(getPriceList());
+    	}
+    	
+    	//and finally validate them
+    	validateFirstRegistration(year, firstRegistrationList);
+    	validateSortPriceDesc(priceList);
+    	
+    	return this;
+    }
+    
+    public SearchPage validateFirstRegistration (String year, ArrayList<Integer> firstRegistrationList){
+    	
+    	for(Integer we:firstRegistrationList){
+     	   Assert.assertTrue(we >= Integer.parseInt(year));
+     	}
+    	
+    	return this;
+    }
+
+    public SearchPage validateSortPriceDesc (ArrayList<Integer> obtainedList){
+    	
+     	ArrayList<Integer> sortedList = new ArrayList<>();
+     	
      	for(Integer s:obtainedList){
      		sortedList.add(s);
      	}
+     	
      	Collections.sort(sortedList);
      	Collections.reverse(sortedList);
      	
      	Assert.assertTrue(sortedList.equals(obtainedList));
 
-    	return this;
-    }
-    
-    public SearchPage goToNextPage () {
-    	click(nextBy);
-    	waitForIt();
-    	return this;
-    }
-
-    public SearchPage iteratePages () {
-    	while (driver.findElements(nextDisabledBy).size() < 1) {
-    		goToNextPage();
-    		//verifyFirstRegistration("2015");
-    		//verifySortPriceDesc();
-    	}
-    	return this;
-    }
-    
-    public SearchPage verifyFirstRegistration (String year){
-    	List<WebElement> elementList= driver.findElements(yearListBy);
-    	
-    	for(WebElement we:elementList){
-     	   Assert.assertTrue(Integer.parseInt(we.getText().substring(5)) >= Integer.parseInt(year));
-     	}
-    	
     	return this;
     }
 }

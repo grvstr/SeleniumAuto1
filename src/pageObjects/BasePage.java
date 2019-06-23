@@ -17,15 +17,20 @@ public class BasePage {
     }
     
     //Web elements
-    By loadingProgressBar = By.xpath("//div[@data-qa-selector=\"loading-banner\"]");
+    By progressbar = By.xpath("//div[@data-qa-selector=\"loading-banner\"]");
  
-    //Wait Wrapper Method
+    //Wait Methods
     public void waitVisibility(By elementBy) {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementBy));
     }
     
     public void waitInvisibility(By elementBy) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(elementBy));
+    }
+
+    public void waitForProgressbarToDisappear()
+    {
+    	waitInvisibility(progressbar);
     }
  
     //Click Method
@@ -51,11 +56,5 @@ public class BasePage {
     public String readText (By elementBy) {
         waitVisibility(elementBy);
         return driver.findElement(elementBy).getText();
-    }
-    
-    //Wait for progress bar to disappear
-    public void waitForIt()
-    {
-    	waitInvisibility(loadingProgressBar);
     }
 }
